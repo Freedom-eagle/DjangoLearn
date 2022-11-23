@@ -25,15 +25,16 @@ SECRET_KEY = 'uquaksd4w^-0omw&511^71e%i7grk^qi#(alqdn!0sd(9+lk=l'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["*",]
+ALLOWED_HOSTS = ["www.stardarkmonarch.com",]
 
 
 # Application definition
 
 INSTALLED_APPS = [
-	'blog',
+	'typeidea',
 	'config',
 	'comment',
+	'blog',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
