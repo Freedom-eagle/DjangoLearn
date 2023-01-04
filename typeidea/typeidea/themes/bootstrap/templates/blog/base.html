@@ -26,7 +26,7 @@
                     {% endfor %}
                 </ul>
                 <form action="/search/" class="form-inline my-2 my-lg-0" method="GET">
-                    <input type="search" class="form-control mr-sm2" placeholder="Search" value="" aria-label="Search">
+                    <input type="search" class="form-control mr-sm2" placeholder="Search" name="keyword" value="{{ keyword }}">
                     <button class="btn btn-outline-success" type="submit">搜索</button>
                 </form>
             </div>

@@ -6,6 +6,8 @@ from django.db.models import Q
 
 from .models import Post, Tag, Category
 from config.models import SideBar
+from comment.forms import CommentForm
+from comment.models import Comment
 
 class CommonViewMixin:
 	def get_context_data(self, **kwargs):
@@ -44,7 +46,7 @@ class CategoryView(IndexView):
 		category_id = self.kwargs.get('category_id')
 		return queryset.filter(category_id=category_id)
 
-class TagView(ListView):
+class TagView(IndexView):
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data()
 		tag_id = self.kwargs.get('tag_id')
@@ -58,7 +60,7 @@ class TagView(ListView):
 	def get_queryset(self):
 		queryset = super().get_queryset()
 		tag_id = self.kwargs.get('tag_id')
-		return queryset.filter(tag_id=tag_id)
+		return queryset.filter(tag=tag_id)
 
 class PostListView(ListView):
 	queryset = Post.latest_posts()
@@ -72,21 +74,38 @@ class PostDetailView(CommonViewMixin, DetailView):
 	context_object_name = 'post'
 	pk_url_kwarg = 'post_id'
 
-# class SearchView(IndexView):
-# 	def get_context_data(self, **kwargs):
-# 		context = super().get_context_data()
-# 		context.update(
-# 			{
-# 				'keyword': self.request.GET.get('keyword')
-# 			}
-# 		)
-# 		return context
-# 	def get_queryset(self):
-# 		queryset = super().get_queryset()
-# 		keyword = self.request.GET.get('keyword')
-# 		if not keyword:
-# 			return queryset
-# 		return queryset.filter(Q(title__icontains=keyword) | Q(desc__icontains=keyword))
+	# def get_context_data(self, **kwargs):
+	# 	context = super().get_context_data(**kwargs)
+	# 	context.update(
+	# 		{
+	# 			'comment_form': CommentForm,
+	# 			'comment_list': Comment.get_by_target(self.request.path)
+	# 		}
+	# 	)
+	# 	return context
+
+
+class SearchView(IndexView):
+	def get_context_data(self, **kwargs):
+		context = super().get_context_data()
+		context.update(
+			{
+				'keyword': self.request.GET.get('keyword','')
+			}
+		)
+		return context
+	def get_queryset(self):
+		queryset = super().get_queryset()
+		keyword = self.request.GET.get('keyword')
+		if not keyword:
+			return queryset
+		return queryset.filter(Q(title__icontains=keyword) | Q(desc__icontains=keyword))
+
+class AuthorView(IndexView):
+	def get_queryset(self):
+		queryset = super(AuthorView, self).get_queryset()
+		author_id = self.kwargs.get('owner_id')
+		return queryset.filter(owner_id=author_id)
 
 # def post_list(request, category_id=None, tag_id=None):
 # 	tag = None
